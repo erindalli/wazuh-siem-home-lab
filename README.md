@@ -34,7 +34,7 @@ The full write-up (architecture, every issue I hit and how I diagnosed it, all t
 
 **Cloning a VM cloned more than I expected:** Cloning the Victim VM to build the honeypot also duplicated its MAC address and its Wazuh agent identity, which caused an IP collision and made Wazuh treat the new machine as the same host as the original. Had to regenerate both before it worked as its own separate agent.
 
-**Moving SSH off port 22 needed more than an sshd_config edit:** Error that became more out of control due to a typo. I needed the port free for Cowrie, but Ubuntu's socket activation controls the actual port binding separately from sshd's own config file, so editing sshd_config alone did nothing. Had to add a `ssh.socket` override as well.
+**Moving SSH off port 22 needed more than an sshd_config edit:** I needed the port free for Cowrie, but Ubuntu's socket activation controls the actual port binding separately from sshd's own config file, so editing sshd_config alone did nothing. Had to add a `ssh.socket` override as well.
 
 **Building detection from scratch for a log source Wazuh had never seen:** Cowrie's logs are JSON and there was no existing rule coverage for them. I pulled the real field names straight out of the raw log lines rather than guessing, built a base rule with child rules attached underneath it, and validated the whole tree with `wazuh-logtest` before pushing it to the live manager.
 
