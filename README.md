@@ -1,10 +1,11 @@
 # Wazuh SIEM Home Lab
 
 I built this SIEM across four virtual machines: 
-1. a self-hosted Wazuh install
-2. a Kali Linux attacker machine
-3. a deliberately vulnerable web app to attack
-4. and a Cowrie SSH honeypot to watch attacker behaviour directly.
+1. self-hosted Wazuh install
+2. Kali Linux attacker machine
+3. deliberately vulnerable web app to attack
+4. Cowrie SSH honeypot to watch attacker behaviour directly.
+   
 Additionally, during this project, I wrote custom detection rules, simulated some real attack techniques, and worked through multiple issues and/or infrastructure problems that came up.
 
 The full write-up (architecture, every issue I hit and how I diagnosed it, all the detection rules, and screenshots) is in [`docs/Wazuh_SIEM_Lab_Report.pdf`](docs/Wazuh_SIEM_Lab_Report.pdf). GitHub's inline preview doesn't always render it, so download the file to view it if the preview shows an error.
