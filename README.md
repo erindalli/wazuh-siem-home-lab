@@ -67,4 +67,4 @@ screenshots/  Highlight screenshots (full set is in the report)
 
 ## Notes
 
-Everything here runs on local virtual machines (UTM on macOS). No cloud resources, nothing exposed to the internet. All the IPs shown are private and only reachable from my own machine's local network.
+Credentials have since been changed or shut down. No cloud resources, nothing exposed to the internet.
