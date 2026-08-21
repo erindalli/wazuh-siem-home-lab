@@ -1,0 +1,76 @@
+<svg viewBox="0 0 900 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kali attacker VM targets the Victim VM and the Honeypot VM; both send agent logs to the Wazuh Manager, which an analyst views in a browser.">
+<title>Wazuh SIEM home lab network topology</title>
+<desc>Kali attacker VM targets both the Victim VM (DVWA) and the Honeypot VM (Cowrie); both send agent logs to the Wazuh Manager VM, which an analyst views via browser.</desc>
+<defs>
+<marker id="arrowGrey" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L6,3 L0,6 Z" fill="#7a7a7a"/>
+</marker>
+<marker id="arrowPink" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L6,3 L0,6 Z" fill="#d6336c"/>
+</marker>
+</defs>
+
+<rect x="0" y="0" width="900" height="660" fill="#ffffff"/>
+
+<text x="450" y="36" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#1a1a1a">Wazuh SIEM Home Lab Network Topology</text>
+<text x="450" y="57" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8a8a8a">All hosts on 192.168.64.0/24 (UTM shared network)</text>
+
+<!-- Subnet grouping box -->
+<rect x="55" y="80" width="790" height="490" rx="14" fill="none" stroke="#d9d9d9" stroke-width="1.25" stroke-dasharray="4,4"/>
+<text x="80" y="100" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#a3a3a3" letter-spacing="0.5">192.168.64.0/24</text>
+
+<!-- Kali node -->
+<rect x="360" y="115" width="180" height="76" rx="10" fill="#f4f4f4" stroke="#9a9a9a" stroke-width="1.5"/>
+<text x="450" y="141" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Kali Linux</text>
+<text x="450" y="159" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c5c5c">Attacker host</text>
+<text x="450" y="177" text-anchor="middle" font-family="Menlo, monospace" font-size="11" fill="#8a8a8a">192.168.64.7</text>
+
+<!-- Victim node -->
+<rect x="110" y="310" width="200" height="88" rx="10" fill="#f4f4f4" stroke="#9a9a9a" stroke-width="1.5"/>
+<text x="210" y="336" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Victim</text>
+<text x="210" y="354" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c5c5c">DVWA target (Apache/MariaDB)</text>
+<text x="210" y="372" text-anchor="middle" font-family="Menlo, monospace" font-size="11" fill="#8a8a8a">192.168.64.12</text>
+<text x="210" y="389" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">Wazuh agent installed</text>
+
+<!-- Honeypot node -->
+<rect x="590" y="310" width="200" height="88" rx="10" fill="#f4f4f4" stroke="#9a9a9a" stroke-width="1.5"/>
+<text x="690" y="336" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Honeypot</text>
+<text x="690" y="354" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c5c5c">Cowrie SSH deception host</text>
+<text x="690" y="372" text-anchor="middle" font-family="Menlo, monospace" font-size="11" fill="#8a8a8a">192.168.64.14</text>
+<text x="690" y="389" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">Wazuh agent installed</text>
+
+<!-- Wazuh Manager node (accent) -->
+<rect x="330" y="480" width="240" height="92" rx="10" fill="#fdf0f5" stroke="#d6336c" stroke-width="2"/>
+<rect x="330" y="480" width="6" height="92" rx="3" fill="#d6336c"/>
+<text x="458" y="507" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Wazuh Manager</text>
+<text x="458" y="525" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c5c5c">Indexer + Manager + Dashboard</text>
+<text x="458" y="543" text-anchor="middle" font-family="Menlo, monospace" font-size="11" fill="#8a8a8a">192.168.64.10</text>
+<text x="458" y="560" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#d6336c">SIEM core</text>
+
+<!-- Arrows: Kali -> Victim -->
+<line x1="400" y1="191" x2="250" y2="308" stroke="#7a7a7a" stroke-width="1.5" marker-end="url(#arrowGrey)"/>
+<text x="285" y="245" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#5c5c5c">Brute force + SQLi</text>
+<text x="285" y="259" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">HTTP :80</text>
+
+<!-- Arrows: Kali -> Honeypot -->
+<line x1="500" y1="191" x2="650" y2="308" stroke="#7a7a7a" stroke-width="1.5" marker-end="url(#arrowGrey)"/>
+<text x="660" y="235" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#5c5c5c">SSH login attempts</text>
+<text x="660" y="249" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">Port 22 to Cowrie :2224</text>
+
+<!-- Arrows: Victim -> Manager -->
+<line x1="240" y1="398" x2="378" y2="482" stroke="#d6336c" stroke-width="1.5" marker-end="url(#arrowPink)"/>
+<text x="270" y="448" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#d6336c">Agent logs</text>
+<text x="270" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">:1514</text>
+
+<!-- Arrows: Honeypot -> Manager -->
+<line x1="660" y1="398" x2="538" y2="482" stroke="#d6336c" stroke-width="1.5" marker-end="url(#arrowPink)"/>
+<text x="632" y="448" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#d6336c">Agent logs</text>
+<text x="632" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#a3a3a3">:1514</text>
+
+<!-- Analyst -->
+<rect x="373" y="600" width="154" height="40" rx="8" fill="#fdf0f5" stroke="#d6336c" stroke-width="1.25"/>
+<text x="450" y="616" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#1a1a1a">Analyst</text>
+<text x="450" y="631" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#8a8a8a">Browser, port 443</text>
+<line x1="458" y1="572" x2="458" y2="600" stroke="#d6336c" stroke-width="1.25" marker-end="url(#arrowPink)"/>
+
+</svg>
