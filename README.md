@@ -1,30 +1,34 @@
 # Wazuh SIEM Home Lab
 
-I built this SIEM from scratch across four virtual machines: a self-hosted Wazuh install, a deliberately vulnerable web app to attack, and a Cowrie SSH honeypot to watch attacker behaviour directly. Along the way I wrote custom detection rules, simulated a couple of real attack techniques, and worked through a fair few infrastructure problems that came up.
+I built this SIEM across four virtual machines: 
+1. a self-hosted Wazuh install
+2. a deliberately vulnerable web app to attack
+3. and a Cowrie SSH honeypot to watch attacker behaviour directly.
+Additionally, during this project, I wrote custom detection rules, simulated some real attack techniques, and worked through multiple issues and/or infrastructure problems that came up.
 
 The full write-up (architecture, every issue I hit and how I diagnosed it, all the detection rules, and screenshots) is in [`docs/Wazuh_SIEM_Lab_Report.pdf`](docs/Wazuh_SIEM_Lab_Report.pdf). GitHub's inline preview doesn't always render it, so download the file to view it if the preview shows an error.
 
 ## Architecture
 
-![Network topology](diagrams/network-topology.svg)
+![Network topology](diagrams/network-topology_1.svg)
 
 | VM | Role | IP |
 |---|---|---|
-| Wazuh Manager | Indexer + Manager + Dashboard (SIEM core) | 192.168.64.10 |
-| Kali Linux | Attacker host | 192.168.64.7 |
-| Victim | Target running DVWA (Apache/MariaDB) | 192.168.64.12 |
-| Honeypot | Cowrie SSH deception host | 192.168.64.14 |
+| **Wazuh Manager** | Indexer + Manager + Dashboard (SIEM core) | ![192.168.64.10](https://img.shields.io/badge/-192.168.64.10-D6336C?style=flat-square) |
+| Kali Linux | Attacker host | ![192.168.64.7](https://img.shields.io/badge/-192.168.64.7-D6336C?style=flat-square) |
+| Victim | Target running DVWA (Apache/MariaDB) | ![192.168.64.12](https://img.shields.io/badge/-192.168.64.12-D6336C?style=flat-square) |
+| Honeypot | Cowrie SSH deception host | ![192.168.64.14](https://img.shields.io/badge/-192.168.64.14-D6336C?style=flat-square) |
 
 ## Attacks simulated
 
 | Attack | Target | Detection | MITRE ATT&CK |
 |---|---|---|---|
-| Brute-force login | DVWA custom login form | Custom rule (no built-in coverage existed) | T1110 (Brute Force) |
-| SQL injection (UNION-based) | DVWA SQLi module | Built-in Wazuh ruleset, zero config | T1190 (Exploit Public-Facing Application) |
-| SSH login + post-exploitation commands | Cowrie honeypot | Custom rule set built for Cowrie's JSON log | T1078, T1059, T1595 |
-| Malware download capture | Cowrie honeypot | Custom rule, file hashed automatically by Cowrie | T1105 (Ingress Tool Transfer) |
+| Brute-force login | DVWA custom login form | Custom rule (no built-in coverage existed) | ![T1110](https://img.shields.io/badge/-T1110-2F9E44?style=flat-square) Brute Force |
+| SQL injection (UNION-based) | DVWA SQLi module | Built-in Wazuh ruleset, zero config | ![T1190](https://img.shields.io/badge/-T1190-2F9E44?style=flat-square) Exploit Public-Facing Application |
+| SSH login + post-exploitation commands | Cowrie honeypot | Custom rule set built for Cowrie's JSON log | ![T1078](https://img.shields.io/badge/-T1078-2F9E44?style=flat-square) ![T1059](https://img.shields.io/badge/-T1059-2F9E44?style=flat-square) ![T1595](https://img.shields.io/badge/-T1595-2F9E44?style=flat-square) |
+| Malware download capture | Cowrie honeypot | Custom rule, file hashed automatically by Cowrie | ![T1105](https://img.shields.io/badge/-T1105-2F9E44?style=flat-square) Ingress Tool Transfer |
 
-## Problems I ran into
+## Problems encountered 
 
 **Credentials scattered across every service:** The indexer, manager, dashboard, and Filebeat each keep their own separate login store. Whenever something broke, my first instinct was to go by whatever the browser was telling me, but that was usually misleading. The only reliable way to find the actual failing layer was to test each service directly through its own API.
 
@@ -32,21 +36,21 @@ The full write-up (architecture, every issue I hit and how I diagnosed it, all t
 
 **A detection rule that matched but never fired:** I'd written the rule logic correctly, but it had no parent (`<if_sid>`), so Wazuh's rule engine never evaluated it at all, since only the child rules under whichever root rule claims an event actually get checked. Tracked this down with `wazuh-logtest -v`.
 
-**Cloning a VM cloned more than I expected:** Cloning the Victim VM to build the honeypot also duplicated its MAC address and its Wazuh agent identity, which caused an IP collision and made Wazuh treat the new machine as the same host as the original. Had to regenerate both before it worked as its own separate agent.
+**Cloning VM issues:** Cloning the Victim VM to build the honeypot also duplicated its MAC address and its Wazuh agent identity, which caused an IP collision and made Wazuh treat the new machine as the same host as the original. Had to regenerate both before it worked as its own separate agent - expected problem. 
 
 **Moving SSH off port 22 needed more than an sshd_config edit:** I needed the port free for Cowrie, but Ubuntu's socket activation controls the actual port binding separately from sshd's own config file, so editing sshd_config alone did nothing. Had to add a `ssh.socket` override as well.
 
-**Building detection from scratch for a log source Wazuh had never seen:** Cowrie's logs are JSON and there was no existing rule coverage for them. I pulled the real field names straight out of the raw log lines rather than guessing, built a base rule with child rules attached underneath it, and validated the whole tree with `wazuh-logtest` before pushing it to the live manager.
+**Building detection for a log source Wazuh had no previous built-in support for:** Cowrie's logs are JSON and there was no existing rule coverage for them. I pulled the real field names straight out of the raw log lines rather than guessing, built a base rule with child rules attached underneath it, and validated the whole tree with `wazuh-logtest` before pushing it to the live manager.
 
 ## Skills demonstrated
 
-- SIEM deployment and administration (Wazuh indexer, manager, dashboard, agents)
-- Linux system administration (systemd, LVM/disk management, service hardening, user/permission management)
-- Custom detection rule authoring and validation (Wazuh rule XML, `wazuh-logtest`)
-- MITRE ATT&CK mapping
-- Web application attack simulation (brute force, SQL injection) with Hydra/curl and manual exploitation
-- Honeypot deployment and attacker behavior capture (Cowrie)
-- Root-cause troubleshooting across a multi-service, multi-VM stack
+★ SIEM deployment and administration (Wazuh indexer, manager, dashboard, agents)
+★ Linux system administration (systemd, LVM/disk management, service hardening, user/permission management)
+★ Custom detection rule authoring and validation (Wazuh rule XML, `wazuh-logtest`)
+★ MITRE ATT&CK mapping
+★ Web application attack simulation (brute force, SQL injection) with Hydra/curl and manual exploitation
+★ Honeypot deployment and attacker behavior capture (Cowrie)
+★ Root-cause troubleshooting across a multi-service, multi-VM stack
 
 ## Screenshots
 
